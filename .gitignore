@@ -4,3 +4,4 @@ config.zip
 *.db
 *.logs
 *.zip
+*\__pycache__\
