@@ -1,3 +1,4 @@
+# client.py
 import requests
 import time
 import json
@@ -7,15 +8,17 @@ from modules.logger import SessionLogger
 from default_variables import get_default
 
 class LogClient:
-    def __init__(self, config_file, backup_file='backup_logs.json', max_retries=3, retry_delay=5, resend_interval=60):
-        self.config = read_config(config_file)
+    def __init__(self, config_file=None, backup_file=None, max_retries=None, retry_delay=None, resend_interval=None):
+        self.config_file = config_file or get_default('DEFAULT_CONFIG_FILE')
+        self.backup_file = backup_file or get_default('DEFAULT_BACKUP_FILE')
+        self.max_retries = max_retries or get_default('DEFAULT_MAX_RETRIES')
+        self.retry_delay = retry_delay or get_default('DEFAULT_RETRY_DELAY')
+        self.resend_interval = resend_interval or get_default('DEFAULT_RESEND_INTERVAL')
+
+        self.config = read_config(self.config_file)
         self.target_server_url = self.config['client_config']['target_server_url']
         self.logger = SessionLogger(method='file')  # Use 'file' method for local logging
-        self.backup_file = backup_file
-        self.max_retries = max_retries
-        self.retry_delay = retry_delay
-        self.resend_interval = resend_interval
-        self.ssl_context = (self.config['client_config']['certificate'], self.config['client_config']['private_key']) if self.config['client_config']['encryption_enabled'].lower() == 'true' else None
+        self.ssl_context = tuple(get_default('DEFAULT_ENCRYPTION_FILES')) if self.config['client_config']['encryption_enabled'].lower() == 'true' else None
         self._start_resend_thread()
 
     def send_logs_to_server(self):

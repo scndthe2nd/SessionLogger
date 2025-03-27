@@ -1,8 +1,10 @@
+# modules/logger.py
 import json
 import os
 import logging
 import socket
 from datetime import datetime
+from default_variables import get_default
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -35,6 +37,7 @@ class SessionLogger:
         self.method = method
         self.custom_formatter = custom_formatter
         self.kwargs = kwargs
+        self.logs_path = get_default('DEFAULT_LOGS_PATH')
 
     def start_session(self, session_id, metadata=None):
         """
@@ -128,7 +131,8 @@ class SessionLogger:
         """
         Write the log message to a file.
         """
-        with open(f"log_{datetime.now().strftime('%Y-%m-%d')}.json", 'w') as f:
+        file_path = os.path.join(self.logs_path, f"log_{datetime.now().strftime('%Y-%m-%d')}.json")
+        with open(file_path, 'w') as f:
             f.write(message)
 
     def _write_to_stdout(self, message):

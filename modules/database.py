@@ -1,8 +1,10 @@
+# modules/database.py
 import sqlite3
+from default_variables import get_default
 
 class DatabaseManager:
-    def __init__(self, db_file):
-        self.db_file = db_file
+    def __init__(self, db_file=None):
+        self.db_file = db_file or get_default('DEFAULT_CONFIG_FILE')
         self.init_db()
 
     def init_db(self):

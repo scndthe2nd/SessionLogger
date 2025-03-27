@@ -2,25 +2,18 @@ import argparse
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 from modules.configurator import configure_database
-from modules.utils import read_config, save_config, zip_files
+from modules.utils import read_config, save_config, zip_files, get_config_data
 from default_variables import get_default
 
-def get_config_data(db_file, table, transport_method, port, target_server_url, encryption_enabled):
-    return {
-        'server_config': {
-            'database_file': db_file,
-            'table': table,
-            'transport_method': transport_method,
-            'port': port
-        },
-        'client_config': {
-            'target_server_url': target_server_url,
-            'port': port,
-            'encryption_enabled': str(encryption_enabled).lower(),
-            'certificate': 'certificate.pem' if encryption_enabled else '',
-            'private_key': 'private_key.pem' if encryption_enabled else ''
-        }
-    }
+def configure_common(db_file, table, transport_method, port, target_server_url, encryption_enabled):
+    config_data = get_config_data(db_file, table, transport_method, port, target_server_url, encryption_enabled)
+    use_encryption = encryption_enabled
+    configure_database(get_default('DEFAULT_CONFIG_FILE'), get_default('DEFAULT_PERMISSIONS'), config_data, use_encryption)
+    files_to_zip = [get_default('DEFAULT_CONFIG_FILE')]
+    if use_encryption:
+        files_to_zip.extend(get_default('DEFAULT_ENCRYPTION_FILES'))
+    zip_files(get_default('DEFAULT_ZIP_FILE'), files_to_zip)
+    print("Configuration completed and files zipped.")
 
 def configure_via_cli():
     parser = argparse.ArgumentParser(description='Setup Configuration')
@@ -32,14 +25,7 @@ def configure_via_cli():
     parser.add_argument('--encryption_enabled', type=bool, default=False, help='Enable encryption (true/false)')
     args = parser.parse_args()
 
-    config_data = get_config_data(args.db_file, args.table, args.transport_method, args.port, args.target_server_url, args.encryption_enabled)
-    use_encryption = args.encryption_enabled
-    configure_database(get_default('DEFAULT_CONFIG_FILE'), get_default('DEFAULT_PERMISSIONS'), config_data, use_encryption)
-    files_to_zip = [get_default('DEFAULT_CONFIG_FILE')]
-    if use_encryption:
-        files_to_zip.extend(get_default('DEFAULT_ENCRYPTION_FILES'))
-    zip_files(get_default('DEFAULT_ZIP_FILE'), files_to_zip)
-    print("Configuration completed and files zipped.")
+    configure_common(args.db_file, args.table, args.transport_method, args.port, args.target_server_url, args.encryption_enabled)
 
 def configure_via_gui():
     root = tk.Tk()
@@ -52,13 +38,7 @@ def configure_via_gui():
     target_server_url = simpledialog.askstring("Input", "Enter target server URL:")
     encryption_enabled = messagebox.askyesno("Input", "Enable encryption?")
 
-    config_data = get_config_data(db_file, table, transport_method, port, target_server_url, encryption_enabled)
-    use_encryption = encryption_enabled
-    configure_database(get_default('DEFAULT_CONFIG_FILE'), get_default('DEFAULT_PERMISSIONS'), config_data, use_encryption)
-    files_to_zip = [get_default('DEFAULT_CONFIG_FILE')]
-    if use_encryption:
-        files_to_zip.extend(get_default('DEFAULT_ENCRYPTION_FILES'))
-    zip_files(get_default('DEFAULT_ZIP_FILE'), files_to_zip)
+    configure_common(db_file, table, transport_method, port, target_server_url, encryption_enabled)
     messagebox.showinfo("Info", "Configuration completed and files zipped.")
 
 if __name__ == "__main__":
