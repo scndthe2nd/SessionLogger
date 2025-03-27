@@ -1,4 +1,4 @@
-from database import fetch_logs
+from modules.database import fetch_logs
 
 def run_cli():
     logs = fetch_logs()
