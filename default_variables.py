@@ -58,3 +58,5 @@ all_vars.update(client_vars)
 
 def get_default(var_name):
     return all_vars.get(var_name, None)
+        
+# EOF

@@ -147,3 +147,5 @@ class SessionLogger:
         """
         custom_handler = self.kwargs.get('custom_handler', lambda x: None)
         custom_handler(message)
+        
+# EOF

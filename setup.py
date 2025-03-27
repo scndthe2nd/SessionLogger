@@ -1,3 +1,4 @@
+#setup.py
 import argparse
 import tkinter as tk
 from tkinter import simpledialog, messagebox
@@ -49,3 +50,5 @@ if __name__ == "__main__":
         configure_via_gui()
     else:
         print("Invalid mode selected. Please choose 'cli' or 'gui'.")
+        
+# EOF

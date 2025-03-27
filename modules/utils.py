@@ -4,6 +4,7 @@ import json
 import os
 import zipfile
 from default_variables import get_default
+from modules.database import DatabaseManager
 
 def read_config(config_file):
     with open(config_file, 'r') as f:
@@ -34,3 +35,5 @@ def get_config_data(db_file, table, transport_method, port, target_server_url, e
             'private_key': get_default('DEFAULT_KEY_FILE') if encryption_enabled else ''
         }
     }
+        
+# EOF

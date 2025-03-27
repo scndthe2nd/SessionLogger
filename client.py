@@ -70,7 +70,5 @@ class LogClient:
         thread = threading.Thread(target=self._resend_logs_from_backup, daemon=True)
         thread.start()
 
-# Example usage
-config_file = get_default('DEFAULT_CONFIG_FILE')
-log_client = LogClient(config_file)
-log_client.send_logs_to_server()
+       
+# EOF

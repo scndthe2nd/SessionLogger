@@ -32,3 +32,7 @@ def configure_database(config_file, permissions, config_data, use_encryption=Fal
         config_data['server config']['private_key'] = key_file
     
     save_config(config_file, config_data)
+        
+# EOF
+
+    

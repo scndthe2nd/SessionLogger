@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Combine Files",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "Get-ChildItem -Recurse -Include *.py | Where-Object { $_.FullName -notmatch '.venv' -and $_.FullName -notmatch '.db$' -and $_.FullName -notmatch '.logs$' -and $_.FullName -notmatch '.zip$' -and $_.FullName -notmatch '__pycache__' } | ForEach-Object { Get-Content $_.FullName } | Out-File -FilePath '_project_cv.txt'"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

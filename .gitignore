@@ -1,3 +1,4 @@
+#GITIGNORE
 .venv/
 config.txt
 config.zip
